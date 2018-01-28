@@ -14,27 +14,27 @@ eval spawn [lrange $argv 0 end]
 
 #Put your test case here
 
-expect "What is the operation?" {foreground green; puts "PASSED";reset} default {foreground red; puts "FAILED";reset}
+expect "What is the operation?"
 send "add\r"
 send "5 4\r"
-expect "result: 9" {foreground green; puts "PASSED";reset} default {foreground red; puts "FAILED";reset}
+expect "result: 9"
 
 #Test the program
 eval spawn [lrange $argv 0 end]
 
 #Put your test case here
 
-expect "What is the operation?" {foreground green; puts "PASSED";reset} default {foreground red; puts "FAILED";reset}
+expect "What is the operation?"
 send "substraction\r"
 send "5 4\r"
-expect "result: 1" {foreground green; puts "PASSED";reset} default {foreground red; puts "FAILED";reset}
+expect "result: 1"
 
 #Test the program
 eval spawn [lrange $argv 0 end]
 
 #Put your test case here
 
-expect "What is the operation?" {foreground green; puts "PASSED";reset} default {foreground red; puts "FAILED";reset}
+expect "What is the operation?"
 send "divide\r"
 send "5 4\r"
-expect "Operation not implemented yet" {foreground green; puts "PASSED";reset} default {foreground red; puts "FAILED";reset}
+expect "Operation not implemented yet"

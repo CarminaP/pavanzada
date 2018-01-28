@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include "operations.h"
 #include "messages.h"
 
@@ -18,7 +19,7 @@ int main()
 
   if (!strcmp(LANG, "en"))
   {
-    messages = message_EN;
+    messages = message_ENG;
   }
 
   if (!strcmp(LANG, "es"))
@@ -32,11 +33,11 @@ int main()
 
   if (!strcmp(operation, "add"))
   {
-    printf("%s: %d\n", message[2], add(operatorOne,operatorTwo));
+    printf("%s: %d\n", messages[2], add(operatorOne,operatorTwo));
   }
   else if (!strcmp(operation, "substraction"))
   {
-    printf("%s: %d\n", message[2], substraction(operatorOne,operatorTwo));
+    printf("%s: %d\n", messages[2], substraction(operatorOne,operatorTwo));
   }
   else{
     printf("%s\n", messages[1]);
