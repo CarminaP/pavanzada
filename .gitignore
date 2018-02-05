@@ -2,3 +2,4 @@
 *.o
 *.exe.stackdump
 practicas/.DS_Store
+tools
