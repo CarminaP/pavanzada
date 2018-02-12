@@ -22,8 +22,8 @@ Input: 3 10     Output: 11
 2. S represents the limit number this sets each student needs to hand in, must not exceed.
 3. Given these 2 number the program needs to find the maximal possible number of new students can be admitted with a given K and S.
 4. We need to calculate the greatest common divisors of numbers from 1 to S, in sets of K and count the possible sets we can get.
-3. We can pre-calculate the gratest common divisors to speed up the checking.
-5. Since S is ≤ 50, we won't need a matrix larger than a 50 x 50 matrix for any case.
+5. We can pre-calculate the gratest common divisors to speed up the checking.
+6. Since S is ≤ 50, we won't need a matrix larger than a 50 x 50 matrix for any case.
 
 
 ## Análisis
