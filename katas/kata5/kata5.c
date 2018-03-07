@@ -2,32 +2,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h> // tolower()
+#include <stdbool.h>
 #include "hash.h"
-
-//for an easier to understand syntax
-#define bool int
-#define true 1
-#define false 0
-
-unsigned hash2(void *key, unsigned size){
-  unsigned char *str = (char *)key;
-    unsigned hash = 5381;
-    int c;
-
-    while (c = *str++)
-        hash = ((hash << 5) + hash) + c; // hash * 33 + c
-
-    return hash % size;
-}
-
-int cmpKeys(void *e1, void *e2){
-  return strcmp((char *)e1, (char *)e2);
-}
-
-void * copy(void *element){
-  char *realValue = (char *) element;
-  return (void *)strdup(realValue);
-}
 
 bool isletter(char c){
     return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
@@ -41,7 +17,7 @@ bool ispunctuation(int c) {
 char * getword(char * line){
     int size = 0;
     char *c;
-    for (c = size; isletter(*c); ++c){
+    for (c = line; isletter(*c); ++c){
         ++size;
     }
     char *word = malloc(sizeof(char) * (size+1));
@@ -53,34 +29,48 @@ char * getword(char * line){
 }
 
 static int wordcloud(char *text){
-  Hash myHash;
-  unsigned size = 55; //El string que se usa es de 52 palabras
-  char key[100];
-  char value[100];
-  initHash(&myHash,size,hash2,cmpKeys, copy, copy);
+  HashInt myHash;
+  hashInit(&myHash, 55);//El string que se usa es de 52 palabras
   char *c;
   for (c = text; *c != '\0'; ++c) {
+    if(ispunctuation(*c)){
+      ++c;
+      continue;
+    }
     if (isletter(*c)){
         char *word = getword(c);
-        int result = (int)getHash(&myHash, word);
+        int *result = hashGet(&myHash, word);
         if (result == NULL){
-          insertHash(&myHash, (void *)word,(void *)1);
+          hashInsert(&myHash, word, 1);
         } else {
-          updateHash(&myHash, word, (void *)result++);
+          hashInsert(&myHash, word, *result++);
           free(word);
         }
 
         while (isletter(*c)){
             ++c;
           }
+        }
       }
-    }
+      for (int i = 0; i < myHash.size; ++i)
+      {
+        for (int j = 0; j < myHash.data[i].length; ++j)
+        {
+          char *word = myHash.data[i].elements[j].key;
+          int value = myHash.data[i].elements[j].value;
+          if(word != NULL){
+            printf("%s = %d\n", word, value);
+          }
+        }
+      }
+      /*
     unsigned pos = myHash.hash(key,myHash.size);
     for(int i = 0; i < myHash.data[pos].count; i++){
       char *word = (char *)myHash.copyKey(myHash.data[pos].elements[i].key);
       int value = (int)myHash.copyValue(myHash.data[pos].elements[i].value);
       printf("%s = %d\n", word, value);
     }
+    */
   }
 
 int main(){

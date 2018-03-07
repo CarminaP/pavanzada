@@ -1,28 +1,38 @@
 typedef struct e {
-  void *key;
-  void *value;
+
+char *key;
+
+int value;
+
 } Element;
 
-typedef struct v {
-  unsigned count;
-  unsigned size;
-  Element *elements;
-} Vector;
+
+
+typedef struct d {
+
+Element *elements;
+
+unsigned count;
+
+unsigned length;
+
+} HashElement;
+
 
 typedef struct h {
-  unsigned size;
-  Vector * data;
-  unsigned (* hash) (void *, unsigned);
-  int (*cmpKeys)(void *,void *);
-  void *(*copyKey)(void *);
-  void *(*copyValue)(void *);
-} Hash;
 
-void initHash(Hash *, unsigned,
-              unsigned (* hash) (void *, unsigned),
-              int (*cmpKeys)(void *,void *),
-              void *(*copyKey)(void *),
-              void *(*copyValue)(void *));
-void insertHash(Hash *, void *, void *);
-void updateHash(Hash *, void *, void *);
-int getHash(Hash *, void *);
+HashElement *data;
+
+unsigned size;
+
+///
+
+} HashInt;
+
+
+
+void hashInit(HashInt *,unsigned);
+
+void hashInsert(HashInt *,char *,int);
+
+int * hashGet(HashInt *, char *);

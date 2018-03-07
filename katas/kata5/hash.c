@@ -3,49 +3,94 @@
 #include <string.h>
 #include "hash.h"
 
-void initHash(Hash *myHash, unsigned size, unsigned (* hash) (void *, unsigned),int (*cmpKeys)(void *,void *),void *(*copyKey)(void *),void *(*copyValue)(void *)){
-  myHash->size = size;
-  myHash->hash = hash;
-  myHash->data = (Vector *)calloc(size, sizeof(Vector));
-  myHash->cmpKeys = cmpKeys;
-  myHash->copyKey = copyKey;
-  myHash->copyValue = copyValue;
+#define HASH_DEBUG "HASH_DEBUG"
+
+void printDebug(char *msg){
+char *hashDebug = getenv(HASH_DEBUG);
+if (hashDebug != NULL && strcmp(hashDebug, "y") == 0){
+  printf("%s\n", msg);
+}
 }
 
-void insertHash(Hash *myHash, void *key, void *value){
-  unsigned pos = myHash->hash(key,myHash->size);
-  if(myHash->data[pos].size == 0){
-    myHash->data[pos].count = 0;
-    myHash->data[pos].size = 2;
-    myHash->data[pos].elements = (Element *)malloc(2 * sizeof(Element));
-  }
-
-  if(myHash->data[pos].count == myHash->data[pos].size){
-    myHash->data[pos].size *= 2;
-    myHash->data[pos].elements = (Element *)realloc(myHash->data[pos].elements, myHash->data[pos].size * sizeof(Element));
-  }
-  unsigned elementPos = myHash->data[pos].count;
-  myHash->data[pos].elements[elementPos].key = myHash->copyKey(key);
-  myHash->data[pos].elements[elementPos].value = myHash->copyValue(value);
-  myHash->data[pos].count += 1;
+unsigned doHash(unsigned char *str, unsigned size){
+unsigned hash = 5381;
+int c;
+while (c = *str++){
+  hash = ((hash << 5) + hash) + c; // hash * 33 + c
 }
 
-void updateHash(Hash *myHash, void *key, void *value){
-  unsigned pos = myHash->hash(key,myHash->size);
-  for(int i = 0; i < myHash->data[pos].count; i++){
-    if(myHash->cmpKeys(key,myHash->data[pos].elements[i].key) == 0){
-      myHash->data[pos].elements[i].value = myHash->copyValue(value);
-    }
-  }
+return hash % size;
 }
 
-int getHash(Hash *myHash, void *key){
-  unsigned pos = myHash->hash(key,myHash->size);
-  int value = NULL;
-  for(int i = 0; i < myHash->data[pos].count; i++){
-    if(myHash->cmpKeys(key,myHash->data[pos].elements[i].key) == 0){
-      value = atoi(myHash->copyValue(myHash->data[pos].elements[i].value));
-    }
-  }
-  return value;
+void hashInit(HashInt *hash, unsigned size){
+hash->size = size;
+hash->data = (HashElement *)calloc(size, sizeof(HashElement));
+};
+
+static void hashDoInsert(HashInt *hash, char *key, int value){
+char errorMessage[255];
+printDebug("dohash");
+unsigned index = doHash(key, hash->size);
+printDebug("dohash2");
+HashElement *currentHashElement = &(hash->data[index]);
+sprintf(errorMessage, "index %d", index);
+printDebug(errorMessage);
+if (currentHashElement->elements == NULL){
+printDebug("CHECKING DATA");
+currentHashElement->elements = (Element *)malloc(2 * sizeof(Element));
+currentHashElement->count = 0;
+currentHashElement->length = 2;
 }
+
+if (currentHashElement->length == currentHashElement->count)
+{
+currentHashElement->length *= 2;
+currentHashElement->elements = (Element *)realloc(currentHashElement->elements, currentHashElement->length * sizeof(Element));
+
+}
+printDebug("Assigning");
+currentHashElement->elements[currentHashElement->count].key = strdup(key);
+currentHashElement->elements[currentHashElement->count].value = value;
+currentHashElement->count += 1;
+printDebug("Completed");
+}
+
+static void hashDoUpdate(HashInt *hash, char *key, int value){
+
+int pos = doHash(key, hash->size);
+int i;
+Element *currentElements = hash->data[pos].elements;
+int currentElementsLength = hash->data[pos].count;
+for (i = 0; i < currentElementsLength; i++){
+if (strcmp(key, currentElements[i].key) == 0){
+currentElements[i].value = value;
+break;
+}
+}
+}
+
+void hashInsert(HashInt *hash, char *key, int value){
+int *oldValue = hashGet(hash, key);
+if (oldValue == NULL){
+hashDoInsert(hash, key, value);
+} else {
+hashDoUpdate(hash,key,value);
+}
+};
+
+int *hashGet(HashInt *hash, char *key){
+int pos = doHash(key, hash->size);
+int i;
+Element *currentElements = hash->data[pos].elements;
+int currentElementsLength = hash->data[pos].count;
+int *value = NULL;
+for (i = 0; i < currentElementsLength; i++) {
+if (strcmp(key, currentElements[i].key) == 0)
+{
+value = (int *)malloc(sizeof(int));
+*value = currentElements[i].value;
+break;
+}
+}
+return value;
+};
