@@ -23,7 +23,10 @@ int main()
     int Y1 = H;
     int prevY = 0;
     int Yrepeated = 0;
-    int maxturn = N;
+    int prevX = 0;
+    int Xrepeated = 0;
+    int temp = 0;
+    int done7 = 0;
 
     // game loop
     while (1) {
@@ -32,23 +35,12 @@ int main()
 
         // Write an action using printf(). DON'T FORGET THE TRAILING \n
         // To debug: fprintf(stderr, "Debug messages...\n");
+        fprintf(stderr, "Turns: %d \n", N);
         fprintf(stderr, "bombDir: %s \n", bombDir);
         fprintf(stderr, "Batman position (%d,%d)\n", X, Y);
         fprintf(stderr, "X0 Y0 (%d,%d)\n", X0, Y0);
         fprintf(stderr, "X1 Y1 (%d,%d)\n", X1, Y1);
-        fprintf(stderr, "strstr(bombDir, U) = %s\n", strstr(bombDir, "U"));
-        fprintf(stderr, "strstr(bombDir, D) = %s\n", strstr(bombDir, "D"));
-        fprintf(stderr, "strstr(bombDir, L) = %s\n", strstr(bombDir, "L"));
-        fprintf(stderr, "strstr(bombDir, R) = %s\n", strstr(bombDir, "R"));
 
-       /* This was for Evasive but it didn't work
-       if (maxturn < 8){
-            Y1 = H/2;
-            Y = 0;
-            Y0 = 0;
-            maxturn = 8;
-        }
-        */
         if(strstr(bombDir, "U") != NULL){
             fprintf(stderr, " U worked\n");
             Y1 = Y - 1;
@@ -74,8 +66,8 @@ int main()
 
         if(Yrepeated == 2){
             Y1 = Y;
-            Y = 0;
-            Y0 = 0;
+            Y = temp;
+            Y0 = temp;
             Yrepeated++;
         } else if (Yrepeated > 5){
          Yrepeated = 0;
@@ -85,7 +77,34 @@ int main()
          Yrepeated++;
         }
 
+        if(Xrepeated == 5){
+            X1 = Y;
+            X = temp;
+            X0 = temp;
+            Xrepeated++;
+        } else if (Xrepeated > 5){
+         Xrepeated = 0;
+        }
+
+        if(prevX == X){
+         Xrepeated++;
+        }
+
+        if(N == 7 && !done7){
+            Y1 = H/2;
+            Y = temp + 1;
+            Y0 = temp + 1;
+            X1 = temp;
+            X = temp + 1;
+            X0 = temp + 1;
+            done7++;
+        }
+
+        fprintf(stderr, "X0 Y0 (%d,%d)\n", X0, Y0);
+        fprintf(stderr, "X1 Y1 (%d,%d)\n", X1, Y1);
+        fprintf(stderr, "prevY %d\n", prevY);
         prevY = Y;
+        prevX = X;
         // the location of the next window Batman should jump to.
         printf("%d %d\n", X, Y);
     }
