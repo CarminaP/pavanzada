@@ -5,7 +5,7 @@
 
 static void lineup(int n, int r, int p, int s);
 
-int main(void) {
+int main() {
 	int t;
 	scanf("%d",&t);
 	for(int i = 1; i <= t; i++) {
