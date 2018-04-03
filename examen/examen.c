@@ -14,7 +14,7 @@ La complejidad, debido a que se ejecuta cada linea a la vez y al invertirlas sol
 */
 
 // 100 palabras por 10 caracteres cada uno
-#define MAX_LEN 1000
+#define MAX_LEN 2000
 
 void reverse(char *begin, char *end);
 
