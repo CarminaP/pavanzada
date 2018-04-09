@@ -28,14 +28,22 @@ int main(){
       printDebug("Found %s\n",word);
       fseek(input, -1*strlen(search),SEEK_CUR);
       searchPos = ftell(input);
-      printDebug("searchPos %d\n",searchPos);
+      printDebug("searchPos = %ld\n",searchPos);
       rewind(input);
       while(ftell(input) != searchPos){
         printDebug("Inside loop\n");
         character = fgetc(input);
         fputc(character,stdout);
       }
-      fputc('\n',stdout);
+      fputs(replace,stdout);
+      fseek(input, strlen(word),SEEK_CUR);
+      while(1){
+        character = fgetc(input);
+        if(feof(input)){
+          break;
+        }
+        fputc(character,stdout);
+      }
       break;
     }
   }
