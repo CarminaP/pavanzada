@@ -5,6 +5,7 @@ typedef struct s {
   char lastName[20];
   short Id;
   char semester[3];
+  char free;
 } Student;
 
 int main(){
@@ -16,6 +17,7 @@ int main(){
     sprintf(pAvanzada[i].lastName, "lastname%i", i);
     pAvanzada[i].Id = i;
     sprintf(pAvanzada[i].semester, "S%i", 8);
+    pAvanzada[i].free = 0;
   }
   FILE *data = fopen(dbName, "wb");
   //arreglo, tamaño del arreglo, numero de elementos y donde se va a guardar
