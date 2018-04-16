@@ -47,7 +47,7 @@ static int hashsolution(int flight_length, int movie_lengths[]) {
 int main() {
   int flight_length = 240;
   int movie_lengths[] = {90, 160, 70, 210, 80, 60, 190};
-  bool result;
+  int result;
 
   result = brutesolution(flight_length,movie_lengths);
   printf("Brute force result: %s \n", result ? "true" : "false");
